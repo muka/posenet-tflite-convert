@@ -10,9 +10,9 @@ RUN pip install --upgrade pip
 RUN pip3 install https://dl.google.com/coral/python/tflite_runtime-2.1.0.post1-cp37-cp37m-linux_x86_64.whl
 RUN pip3 install opencv-python scipy
 
-ADD run.py /
-ADD posenet /
+ADD ./src /src
+WORKDIR /src
 
-ENV PYTHONPATH=$PYTHONPATH:/usr/lib/python3/dist-packages:/usr/local/python3.7/dist-packages
+ENV PYTHONPATH=$PYTHONPATH:/usr/lib/python3/dist-packages:/usr/local/python3.7/dist-packages:/src:/src/posenet
 
-ENTRYPOINT [ "python3", "/run.py" ]
+ENTRYPOINT [ "python3", "run.py" ]

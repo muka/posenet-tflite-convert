@@ -1,7 +1,8 @@
 #!/usr/bin/python
 import json
+import os
 
-TFLITE_MODEL = 'posenet_mobilenet_v1_075_353_481_quant_decoder_edgetpu'
+TFLITE_MODEL = os.environ["TFLITE_MODEL"]
 
 INPUT_MODEL = './data/%s.json' % TFLITE_MODEL
 OUTPUT_MODEL_JSON = './data/%s.updated.json' % TFLITE_MODEL

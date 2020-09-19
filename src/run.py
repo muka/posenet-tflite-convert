@@ -3,12 +3,13 @@
 # Test Posenet model with custom decoding
 # ----------------------------------------------------------------------------------------------------------------------
 import cv2
+import os
 import numpy as np
 from edgetpu.basic.basic_engine import BasicEngine
 from edgetpu import __version__ as edgetpu_version
 from posenet.decode_multi import decode_multiple_poses
 
-TFLITE_MODEL = 'posenet_mobilenet_v1_075_353_481_quant_decoder_edgetpu'
+TFLITE_MODEL = os.environ["TFLITE_MODEL"]
 
 MODEL = "/data/%s.updated.tflite" % TFLITE_MODEL
 OUTPUT_STRIDE = 16
@@ -56,12 +57,13 @@ def extract_outputs(outputs, engine):
 # ----------------------------------------------------------------------------------------------------------------------
 # Testing
 # ----------------------------------------------------------------------------------------------------------------------
-INPUT_IMG = '/test.jpg'
+INPUT_IMG = './test.jpg'
 
-def main():
+
+def main(height, width):
     # Read input image
     frame = cv2.imread(INPUT_IMG)
-    frame = cv2.resize(frame, (481, 353))
+    frame = cv2.resize(frame, (width, height))
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
     # Instantiate inference engine
@@ -88,7 +90,8 @@ if __name__ == '__main__':
 
     print('edgetpu_version:' + edgetpu_version)
     engine = BasicEngine(MODEL)
-    print('Input shape:', engine.get_input_tensor_shape())
+    _, height, width, channels = engine.get_input_tensor_shape()
+    print('Input shape:', )
     print('Output sizes:', engine.get_all_output_tensors_sizes())
 
-    main()
+    main(height, width)
