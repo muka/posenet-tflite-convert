@@ -3,6 +3,8 @@
 clean:
 	rm -rf ./data
 
+setup: clean download bazel/build
+
 download:
 	mkdir -p ./data
 	cd data && git clone https://github.com/google-coral/edgetpu.git

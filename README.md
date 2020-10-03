@@ -1,12 +1,8 @@
-# posenet-tflite-convert
+# posenet on tflite CPU
 
+A setup to test the approach described in https://github.com/google-coral/edgetpu/issues/127
 
-From https://github.com/google-coral/edgetpu/issues/127
-
-
-Okay, so based on this documentation the tflite's python API does allows you to have multiple delegates, I just tested and this works:
-
-```
+```python
 import tflite_runtime.interpreter as tflite
 tpu = tflite.load_delegate('libedgetpu.so.1')
 posenet = tflite.load_delegate('posenet_decoder.so')
@@ -15,8 +11,17 @@ interpreter = tflite.Interpreter('posenet_mobilenet_v1_075_353_481_quant_decoder
 
 ```                  
 
-I guess you can refer to #86 for usage instructions. Anyhow, you can get the posenet_decoder.so by building it with
-`bazel build src/cpp/posenet/posenet_decoder.so` and it'll be in the bazel-bin/* directory.
-When running, make sure to point `LD_LIBRARY_PATH=path/to/posenet_decoder.so` so that tflite can find it!
+## Usage
 
-Closing for now, feel free to ask more questions if need more details :)
+1. download edgetpu repo and build bazel image
+
+```sh
+make setup
+```
+
+2. Compile 
+
+```sh
+make bazel/compile 
+```
+
