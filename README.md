@@ -1,16 +1,22 @@
 # posenet-tflite-convert
 
-This code is a PoC based on the great write up https://towardsdatascience.com/optimizing-pose-estimation-on-the-coral-edge-tpu-d331c63cfed
 
-* Requires a Coral TPU to run
-
-## Setup 
-
-`make clean download convert` 
+From https://github.com/google-coral/edgetpu/issues/127
 
 
-## Docker build & run 
+Okay, so based on this documentation the tflite's python API does allows you to have multiple delegates, I just tested and this works:
 
-1. Build image `make docker/build`
-2. run with mobilenet `make mobilenet/run`
-3. run with resnet `make resnet/run` (not working, WIP)
+```
+import tflite_runtime.interpreter as tflite
+tpu = tflite.load_delegate('libedgetpu.so.1')
+posenet = tflite.load_delegate('posenet_decoder.so')
+interpreter = tflite.Interpreter('posenet_mobilenet_v1_075_353_481_quant_decoder.tflite'), 
+                                               experimental_delegates=[tpu, posenet])
+
+```                  
+
+I guess you can refer to #86 for usage instructions. Anyhow, you can get the posenet_decoder.so by building it with
+`bazel build src/cpp/posenet/posenet_decoder.so` and it'll be in the bazel-bin/* directory.
+When running, make sure to point `LD_LIBRARY_PATH=path/to/posenet_decoder.so` so that tflite can find it!
+
+Closing for now, feel free to ask more questions if need more details :)

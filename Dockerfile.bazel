@@ -1,0 +1,15 @@
+FROM ubuntu:18.04
+
+RUN apt update -q && apt install -y python3-minimal python3-pip curl gnupg
+RUN curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/bazel.gpg && \
+    echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8" > /etc/apt/sources.list.d/bazel.list && \
+    apt update -q && apt install -y bazel 
+
+RUN useradd -rm -s /bin/bash -g root -G sudo -u 1000 sa
+RUN pip3 install --upgrade pip six
+
+RUN ln -s /usr/bin/python3 /usr/bin/python 
+
+USER sa
+
+ENTRYPOINT [ "bazel" ]
