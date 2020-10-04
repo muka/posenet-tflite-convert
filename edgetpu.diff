@@ -1,0 +1,13 @@
+diff --git a/src/cpp/posenet/posenet_decoder_tflite_plugin.cc b/src/cpp/posenet/posenet_decoder_tflite_plugin.cc
+index ae28f8d..a720384 100644
+--- a/src/cpp/posenet/posenet_decoder_tflite_plugin.cc
++++ b/src/cpp/posenet/posenet_decoder_tflite_plugin.cc
+@@ -9,6 +9,8 @@
+ #include "tensorflow/lite/context_util.h"
+ #include "tensorflow/lite/util.h"
+ 
++#include "tensorflow/lite/interpreter.h"
++
+ namespace {
+ using tflite::ConvertVectorToTfLiteIntArray;
+ using tflite::TfLiteIntArrayView;
