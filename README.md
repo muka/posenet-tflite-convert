@@ -22,6 +22,6 @@ make setup
 2. Compile 
 
 ```sh
-make bazel/compile 
+make compile 
 ```
 

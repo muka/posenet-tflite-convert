@@ -26,8 +26,13 @@ bazel/clean:
 	rm -rf ./data/tmp
 	mkdir -p ./data/tmp
 
-bazel/compile:
+compile/prepare:
 	mkdir -p ./data/tmp
+	rm -rf data/build
+
+compile: compile/cpu
+
+compile/cpu: compile/prepare
 	docker run \
 		-e BAZEL_CXXOPTS="-std=c++11" \
 		-e USER="`id -u`" \
@@ -38,4 +43,21 @@ bazel/compile:
 		opny/posenet-tflite-convert \
 		--output_user_root=/tmp/build_output build src/cpp/posenet/posenet_decoder.so \
 		--sandbox_debug --verbose_failures
-	cp data/tmp/*/execroot/edgetpu/bazel-out/k8-fastbuild/bin/src/cpp/posenet/posenet_decoder.so data/
+	mkdir -p data/build/cpu
+	cp data/tmp/*/execroot/edgetpu/bazel-out/k8-fastbuild/bin/src/cpp/posenet/posenet_decoder.so data/build/cpu/
+	echo "Build avail in data/build/cpu"
+
+compile/armeabihf: compile/prepare
+	docker run \
+		-e BAZEL_CXXOPTS="-std=c++11" \
+		-e USER="`id -u`" \
+		-u="`id -u`" \
+		-v `pwd`/data/edgetpu:/src/workspace \
+		-v `pwd`/data/tmp:/tmp/build_output \
+		-w /src/workspace \
+		opny/posenet-tflite-convert \
+		--output_user_root=/tmp/build_output build src/cpp/posenet/posenet_decoder.so \
+		--sandbox_debug --verbose_failures \
+		--cpu=armeabihf
+	mkdir -p data/build/armeabihf
+	cp data/tmp/*/execroot/edgetpu/bazel-out/k8-fastbuild/bin/src/cpp/posenet/posenet_decoder.so data/build/armeabihf
